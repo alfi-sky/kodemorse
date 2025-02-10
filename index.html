@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombol Morse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        button {
+            padding: 20px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            outline: none;
+        }
+        button:active {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tombol Morse</h1>
+        <button id="morseButton" onmousedown="startBeep()" onmouseup="stopBeep()" ontouchstart="startBeep()" ontouchend="stopBeep()">
+            Tekan untuk Morse
+        </button>
+    </div>
+
+    <script>
+        let audioContext;
+        let oscillator;
+        let isBeeping = false;
+
+        // Fungsi untuk memulai bunyi
+        function startBeep() {
+            if (!isBeeping) {
+                isBeeping = true;
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine'; // Jenis suara
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime); // Frekuensi suara
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+            }
+        }
+
+        // Fungsi untuk menghentikan bunyi
+        function stopBeep() {
+            if (isBeeping) {
+                oscillator.stop();
+                isBeeping = false;
+            }
+        }
+    </script>
+</body>
+</html>
