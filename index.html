@@ -11,14 +11,15 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: black; /* Latar belakang hitam */
             margin: 0;
+            transition: background-color 0.3s ease; /* Efek transisi untuk perubahan warna */
         }
         .container {
             text-align: center;
         }
         button {
-            padding: 20px 40px;
+            padding: 40px 40px;
             font-size: 24px;
             border: none;
             border-radius: 10px;
@@ -34,9 +35,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Tombol Morse</h1>
-        <button id="morseButton" onmousedown="startBeep()" onmouseup="stopBeep()" ontouchstart="startBeep()" ontouchend="stopBeep()">
-            Tekan untuk Morse
+        <h1>Click to </h1>
+        <button id="morseButton" onmousedown="startBeep(); changeBackground(true)" onmouseup="stopBeep(); resetBackground()" ontouchstart="startBeep(); changeBackground(true)" ontouchend="stopBeep(); resetBackground()">
+            Morse !
         </button>
     </div>
 
@@ -50,6 +51,8 @@
             if (!isBeeping) {
                 isBeeping = true;
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Buat oscillator baru setiap kali
                 oscillator = audioContext.createOscillator();
                 oscillator.type = 'sine'; // Jenis suara
                 oscillator.frequency.setValueAtTime(600, audioContext.currentTime); // Frekuensi suara
@@ -64,6 +67,18 @@
                 oscillator.stop();
                 isBeeping = false;
             }
+        }
+
+        // Fungsi untuk mengganti latar belakang menjadi putih
+        function changeBackground(isPressed) {
+            if (isPressed) {
+                document.body.style.backgroundColor = 'white'; // Ganti latar belakang menjadi putih
+            }
+        }
+
+        // Fungsi untuk mengembalikan latar belakang ke hitam
+        function resetBackground() {
+            document.body.style.backgroundColor = 'black'; // Kembalikan latar belakang ke hitam
         }
     </script>
 </body>
