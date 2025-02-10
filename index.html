@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tombol Flashlight Morse</title>
+    <title>Tombol Morse</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,9 +11,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000;
+            background-color: #f0f0f0;
             margin: 0;
-            color: white;
         }
         .container {
             text-align: center;
@@ -31,58 +30,41 @@
         button:active {
             background-color: #0056b3;
         }
-        .warning {
-            margin-top: 20px;
-            color: #ff4444;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Tombol Flashlight Morse</h1>
-        <button id="flashlightButton" onmousedown="startFlashlight()" onmouseup="stopFlashlight()" ontouchstart="startFlashlight()" ontouchend="stopFlashlight()">
-            Tekan untuk Flashlight
+        <h1>Tombol Morse</h1>
+        <button id="morseButton" onmousedown="startBeep()" onmouseup="stopBeep()" ontouchstart="startBeep()" ontouchend="stopBeep()">
+            Tekan untuk Morse
         </button>
-        <p class="warning" id="warningMessage"></p>
     </div>
 
     <script>
-        let stream;
-        let track;
-        const warningMessage = document.getElementById('warningMessage');
+        let audioContext;
+        let oscillator;
+        let isBeeping = false;
 
-        // Fungsi untuk mengaktifkan flashlight
-        async function startFlashlight() {
-            try {
-                // Meminta akses ke kamera
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                track = stream.getVideoTracks()[0];
-
-                // Mengaktifkan flashlight
-                await track.applyConstraints({
-                    advanced: [{ torch: true }]
-                });
-
-                console.log('Flashlight aktif!');
-            } catch (error) {
-                warningMessage.textContent = 'Flashlight tidak didukung atau akses ditolak. Pastikan Anda menggunakan perangkat mobile dan browser yang mendukung.';
-                console.error('Error:', error);
+        // Fungsi untuk memulai bunyi
+        function startBeep() {
+            if (!isBeeping) {
+                isBeeping = true;
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine'; // Jenis suara
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime); // Frekuensi suara
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
             }
         }
 
-        // Fungsi untuk mematikan flashlight
-        function stopFlashlight() {
-            if (track) {
-                track.stop(); // Menghentikan track dan mematikan flashlight
-                console.log('Flashlight dimatikan!');
+        // Fungsi untuk menghentikan bunyi
+        function stopBeep() {
+            if (isBeeping) {
+                oscillator.stop();
+                isBeeping = false;
             }
         }
-
-        // Memastikan flashlight dimatikan saat halaman ditutup
-        window.addEventListener('beforeunload', () => {
-            stopFlashlight();
-        });
     </script>
 </body>
 </html>
