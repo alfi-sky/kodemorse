@@ -44,6 +44,7 @@
     <script>
         let audioContext;
         let oscillator;
+        let gainNode;  // Menambahkan gain node untuk mengatur volume
         let isBeeping = false;
 
         // Fungsi untuk memulai bunyi
@@ -54,9 +55,15 @@
 
                 // Buat oscillator baru setiap kali
                 oscillator = audioContext.createOscillator();
+                gainNode = audioContext.createGain();  // Membuat gain node
+
                 oscillator.type = 'sine'; // Jenis suara
                 oscillator.frequency.setValueAtTime(600, audioContext.currentTime); // Frekuensi suara
-                oscillator.connect(audioContext.destination);
+                oscillator.connect(gainNode);  // Menghubungkan oscillator ke gain node
+                gainNode.connect(audioContext.destination);  // Menghubungkan gain node ke output
+
+                gainNode.gain.setValueAtTime(1, audioContext.currentTime);  // Menambah volume suara (nilai 1 untuk volume normal)
+
                 oscillator.start();
             }
         }
